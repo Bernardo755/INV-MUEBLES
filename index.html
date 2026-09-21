@@ -242,29 +242,39 @@
         }
 
         // ================= REGISTRO Y EDICIÓN =================
-        function prepararEdicion(id) {
+
+function prepararEdicion(id) {
             const item = inventarioGlobal.find(i => i.ID === id);
             if(!item) return;
 
+            // 1. Mostrar módulo de edición SIN activar la función que limpia el formulario
+            document.getElementById('modulo-visualizador').classList.add('hidden');
+            document.getElementById('modulo-registro').classList.remove('hidden');
+
+            // 2. Establecer el ID para que el sistema sepa que es una actualización
             modoEdicionId = id;
             document.getElementById('formTitle').innerText = 'Editar Registro ID: ' + id;
             
-            document.getElementById('cantidad').value = item.CANTIDAD;
-            document.getElementById('nombre').value = item.NOMBRE;
-            document.getElementById('medidas').value = item.MEDIDAS;
-            document.getElementById('notas').value = item.NOTAS;
-            document.getElementById('tela').value = item.TELA;
-            document.getElementById('madera').value = item.MADERA;
-            document.getElementById('precioRemate').value = item.PRECIO_REMATE;
-            document.getElementById('precioMercado').value = item.PRECIO_MERCADO;
+            // 3. Cargar todos los datos existentes en las casillas correspondientes
+            document.getElementById('cantidad').value = item.CANTIDAD || '';
+            document.getElementById('nombre').value = item.NOMBRE || '';
+            document.getElementById('medidas').value = item.MEDIDAS || '';
+            document.getElementById('notas').value = item.NOTAS || '';
+            document.getElementById('tela').value = item.TELA || '';
+            document.getElementById('madera').value = item.MADERA || '';
+            document.getElementById('precioRemate').value = item.PRECIO_REMATE || '';
+            document.getElementById('precioMercado').value = item.PRECIO_MERCADO || '';
             
-            // Cargar fecha
+            // 4. Cargar la fecha original exacta
             if(item.FECHA) {
+                // Pequeño ajuste para que respete el formato que requiere el calendario
                 const dateObj = new Date(item.FECHA);
-                document.getElementById('fecha').value = dateObj.toISOString().split('T')[0];
+                const año = dateObj.getFullYear();
+                const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const dia = String(dateObj.getDate()).padStart(2, '0');
+                
+                document.getElementById('fecha').value = `${año}-${mes}-${dia}`;
             }
-            
-            cambiarModulo('registro');
         }
 
         async function guardarRegistro(e) {
