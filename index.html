@@ -15,7 +15,7 @@
         // ==========================================
         // CONFIGURACIÓN: REEMPLAZA ESTA URL CON LA TUYA
         // ==========================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyG0_j9c8T4aQRqehckHmw9BfaOLB5w8v16VoDPcYayuuzqQTkZ1AQ0RoVHPGweziFn7w/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzL8GOhjfbAXNwQuuXHJr0QkMoQftQlZmfJaWVfsCg5D54I29tL4kW-x-BqkUwRwHt3yg/exec";
         
         let inventarioGlobal = [];
         let bajasGlobal = [];
@@ -331,18 +331,27 @@
             document.getElementById('inputFotos').value = "";
         }
 
-        function actualizarFiltroMaderas(maderas) {
-            const datalist = document.getElementById('maderasPreCargadas');
+        function actualizarFiltroMaderas(maderasRegistradas) {
+            // 1. SELECTOR DEL BUSCADOR: Solo carga las maderas que existen en el inventario actual
             const selectFilter = document.getElementById('filterMadera');
-            
-            datalist.innerHTML = '';
             let htmlOptions = '<option value="">Cualquier Madera</option>';
             
-            maderas.forEach(m => {
-                datalist.innerHTML += `<option value="${m}">`;
+            maderasRegistradas.forEach(m => {
                 htmlOptions += `<option value="${m.toLowerCase()}">${m}</option>`;
             });
             selectFilter.innerHTML = htmlOptions;
+
+            // 2. LISTA DEL REGISTRO: Carga las constantes sugeridas + las que ya existen
+            const datalist = document.getElementById('maderasPreCargadas');
+            const maderasConstantes = ["PINO", "TECA", "HAYA", "ENCINO", "FRESNO", "CAOBA"];
+            
+            // Unimos las constantes con las registradas para que tengas todas las opciones al crear
+            const opcionesParaRegistro = [...new Set([...maderasConstantes, ...maderasRegistradas])];
+            
+            datalist.innerHTML = '';
+            opcionesParaRegistro.forEach(m => {
+                datalist.innerHTML += `<option value="${m}">`;
+            });
         }
 
         function formatearFecha(cadena) {
